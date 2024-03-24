@@ -105,7 +105,7 @@ const addExpense = async (req, res) => {
     const addExpenseRes = await client.query(
       `INSERT INTO expenses(expensetitle,expensecategoryid,expensedate,expenseamount,userid) VALUES('${expenseTitle}','${expensecategoryid}','${expenseDate}','${expenseAmount}','${decodedToken.userid}') RETURNING*`
     );
-    
+
     res.status(201).json({
       success: true,
       message: "successfully added expense",
@@ -205,6 +205,14 @@ try {
               success: false,
               message: "something went wrong with jwt",
             });
+            return;
+          }
+
+          if(newExpenseTitle.trim()==="" || Number(newExpenseAmount)===0 || newExpenseCategory.trim()==="" || newExpenseDate.trim()===""){
+            res.status(400).json({
+                "success":false,
+                "message":"please enter the required fields"
+            })
             return;
           }
         //   getting  category if for new category name
