@@ -235,7 +235,56 @@ try {
 } catch (error) {
     console.log(error);
 }
+}
 
+
+const getAllSortedExpenses = async (req,res) => {
+try {
+    const {sortByExpenseAmount} = req.body;
+    if (!req.cookies?.accessToken) {
+      res.status(400).json({
+        success: false,
+        message: "user is not logged in",
+      });
+      return;
+    }
+    const decodedToken = jwt.verify(
+      req.cookies.accessToken,
+      process.env.JWT_SECRET
+    );
+    if (!decodedToken) {
+      res.status(500).json({
+        success: false,
+        message: "something went wrong with jwt",
+      });
+      return;
+    }
+    // if sortByExpenseAmount = 0 -> no sort ,
+    //  if sortByExpenseAmount = -1 -> descending (high to low)
+    // if sortByExpenseAmount = 1 -> low to hih
+    if(Number(sortByExpenseAmount)===0){
+      const expenses = await client.query(`SELECT * FROM expenses WHERE userid=${decodedToken.userid}`);
+      res.status(200).json({
+        "success":true,
+        "expenses":expenses.rows,
+      })
+    } else if(Number(sortByExpenseAmount)===1){
+      // low to high(ASC)
+      const expenses = await client.query(`SELECT * FROM expenses WHERE userid=${decodedToken.userid} ORDER BY expenseamount ASC`);
+      res.status(200).json({
+        "success":true,
+        "expenses":expenses.rows,
+      })
+    } else {
+      const expenses = await client.query(`SELECT * FROM expenses WHERE userid=${decodedToken.userid} ORDER BY expenseamount DESC`);
+      res.status(200).json({
+        "success":true,
+        "expenses":expenses.rows,
+      })
+    }
+} catch (error) {
+  console.log(error);
+}
 }
 
 
@@ -315,4 +364,5 @@ export {
   getExpenseCategoryNameById,
   deleteExpense,
   editExpense,
+  getAllSortedExpenses,
 };

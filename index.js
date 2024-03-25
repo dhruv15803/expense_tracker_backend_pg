@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import pkg from 'pg';
 import multer from 'multer';
 import { getAllUsers, getLoggedInUser, loginUser, logoutUser, registerUser } from './controllers/user.controller.js';
-import { addExpense, addExpenseCategory, deleteExpense, editExpense, getAllExpenseCategories, getAllExpenses, getExpenseCategoryNameById } from './controllers/expenses.controller.js';
+import { addExpense, addExpenseCategory, deleteExpense, editExpense, getAllExpenseCategories, getAllExpenses, getAllSortedExpenses, getExpenseCategoryNameById } from './controllers/expenses.controller.js';
 const {Client} = pkg;
 dotenv.config({
     path:"./.env"
@@ -66,6 +66,7 @@ app.get('/expense/getAllExpenses',getAllExpenses);
 app.post('/expense/getExpenseCategoryNameById',getExpenseCategoryNameById);
 app.post('/expense/delete',deleteExpense);
 app.post('/expense/edit',editExpense);
+app.post('/expense/getAllSortedExpenses',getAllSortedExpenses);
 
 app.listen(port,()=>{
     console.log(`server running at http://localhost:${port}`);
