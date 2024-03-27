@@ -6,7 +6,7 @@ import pkg from 'pg';
 import multer from 'multer';
 import { getAllUsers, getLoggedInUser, loginUser, logoutUser, registerUser } from './controllers/user.controller.js';
 import { addExpense, addExpenseCategory, deleteExpense, editExpense, getAllExpenseCategories, getAllExpenses, getAllSortedExpenses, getAllSortedExpensesByDate, getExpenseCategoryNameById } from './controllers/expenses.controller.js';
-import { addIncome, addIncomeCategory, deleteIncome, editIncome, getAllIncomeCategories, getAllIncomes, getIncomeCategoryNameById } from './controllers/income.controller.js';
+import { addIncome, addIncomeCategory, deleteIncome, editIncome, getAllIncomeCategories, getAllIncomes, getAllSortedIncomes, getAllSortedIncomesByDate, getIncomeCategoryNameById } from './controllers/income.controller.js';
 const {Client} = pkg;
 dotenv.config({
     path:"./.env"
@@ -79,6 +79,8 @@ app.get('/income/getAllIncomes',getAllIncomes);
 app.post('/income/getIncomeCategoryNameById',getIncomeCategoryNameById);
 app.post('/income/edit',editIncome);
 app.post('/income/delete',deleteIncome);
+app.post('/income/getAllSortedIncomes',getAllSortedIncomes);
+app.post('/income/getAllSortedIncomesByDate',getAllSortedIncomesByDate);
 
 app.listen(port,()=>{
     console.log(`server running at http://localhost:${port}`);

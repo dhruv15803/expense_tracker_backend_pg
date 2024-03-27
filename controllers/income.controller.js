@@ -291,6 +291,108 @@ const getIncomeCategoryNameById = async (req, res) => {
   }
 };
 
+const getAllSortedIncomes = async (req, res) => {
+  try {
+    const { sortByIncomeAmount } = req.body;
+    if (!req.cookies?.accessToken) {
+      res.status(400).json({
+        success: false,
+        message: "user is not logged in",
+      });
+      return;
+    }
+    const decodedToken = jwt.verify(
+      req.cookies.accessToken,
+      process.env.JWT_SECRET
+    );
+    if (!decodedToken) {
+      res.status(500).json({
+        success: false,
+        message: "something went wrong with jwt",
+      });
+      return;
+    }
+    if (Number(sortByIncomeAmount) === 0) {
+      const incomes = await client.query(
+        `SELECT * FROM income WHERE userid=${decodedToken.userid}`
+      );
+      res.status(200).json({
+        success: true,
+        incomes: incomes.rows,
+      });
+    } else if (Number(sortByIncomeAmount) === 1) {
+      const incomes = await client.query(
+        `SELECT * FROM income WHERE userid=${decodedToken.userid} ORDER BY incomeamount ASC`
+      );
+      res.status(200).json({
+        success: true,
+        incomes: incomes.rows,
+      });
+    } else {
+      const incomes = await client.query(
+        `SELECT * FROM income WHERE userid=${decodedToken.userid} ORDER BY incomeamount DESC`
+      );
+      res.status(200).json({
+        success: true,
+        incomes: incomes.rows,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getAllSortedIncomesByDate = async (req, res) => {
+  try {
+    const { sortByIncomeDate } = req.body;
+    if (!req.cookies?.accessToken) {
+      res.status(400).json({
+        success: false,
+        message: "user is not logged in",
+      });
+      return;
+    }
+    const decodedToken = jwt.verify(
+      req.cookies.accessToken,
+      process.env.JWT_SECRET
+    );
+    if (!decodedToken) {
+      res.status(500).json({
+        success: false,
+        message: "something went wrong with jwt",
+      });
+      return;
+    }
+    if (Number(sortByIncomeDate) === 0) {
+      const incomes = await client.query(
+        `SELECT * FROM income WHERE userid=${decodedToken.userid}`
+      );
+      res.status(200).json({
+        success: true,
+        incomes: incomes.rows,
+      });
+    } else if (Number(sortByIncomeDate) === 1) {
+      const incomes = await client.query(
+        `SELECT * FROM income WHERE userid=${decodedToken.userid} ORDER BY incomedate ASC`
+      );
+      res.status(200).json({
+        success: true,
+        incomes: incomes.rows,
+      });
+    } else {
+      const incomes = await client.query(
+        `SELECT * FROM income WHERE userid=${decodedToken.userid} ORDER BY incomedate DESC`
+      );
+      res.status(200).json({
+        success: true,
+        incomes: incomes.rows,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const getAllIncomes = async (req, res) => {
   try {
     if (!req.cookies?.accessToken) {
@@ -331,4 +433,6 @@ export {
   getIncomeCategoryNameById,
   editIncome,
   deleteIncome,
+  getAllSortedIncomes,
+  getAllSortedIncomesByDate,
 };
